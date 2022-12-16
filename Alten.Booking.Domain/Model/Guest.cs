@@ -1,9 +1,4 @@
 ﻿using Alten.Booking.Domain.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Alten.Booking.Domain.Model
 {
@@ -17,6 +12,17 @@ namespace Alten.Booking.Domain.Model
         public Guest()
         {
             Id = Guid.NewGuid().ToString();
+            Name = string.Empty;
+            Phone = string.Empty;
+            Email = string.Empty;
+        }
+
+        public Guest(string name, string phone, string email)
+        {
+            Id = Guid.NewGuid().ToString();
+            Name = name;
+            Phone = phone;
+            Email = email;
         }
     }
 }
