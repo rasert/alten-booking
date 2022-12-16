@@ -5,21 +5,26 @@ namespace Alten.Booking.Domain.Model
     public class Room : IEntity
     {
         public string Id { get; set; }
+        public int Number { get; set; }
         public string Description { get; set; }
         public virtual List<Reservation> Reservations { get; set; }
+
+        // Room Capacity: for simplicity, it won't be done.
 
         public Room()
         {
             Id = Guid.NewGuid().ToString();
-            Reservations = new List<Reservation>();
+            Number = 0;
             Description = string.Empty;
+            Reservations = new List<Reservation>();            
         }
 
-        public Room(string description)
+        public Room(int number, string description)
         {
             Id = Guid.NewGuid().ToString();
-            Reservations = new List<Reservation>();
+            Number = number;
             Description = description;
+            Reservations = new List<Reservation>();
         }
     }
 }
