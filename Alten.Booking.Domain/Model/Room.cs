@@ -1,4 +1,5 @@
 ﻿using Alten.Booking.Domain.Abstractions;
+using System.Xml.Linq;
 
 namespace Alten.Booking.Domain.Model
 {
@@ -25,6 +26,17 @@ namespace Alten.Booking.Domain.Model
             Number = number;
             Description = description;
             Reservations = new List<Reservation>();
+
+            if (number <= 0)
+                throw new ArgumentException("Room number must be above zero.", nameof(number));
+
+            if (string.IsNullOrEmpty(description))
+                throw new ArgumentNullException(nameof(description));
+        }
+
+        public bool IsAvailable(DateTime desiredCheckin, DateTime desiredCheckout)
+        {
+            throw new NotImplementedException();
         }
     }
 }

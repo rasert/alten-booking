@@ -23,6 +23,15 @@ namespace Alten.Booking.Domain.Model
             Name = name;
             Phone = phone;
             Email = email;
+
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            if (string.IsNullOrEmpty(phone))
+                throw new ArgumentNullException(nameof(phone));
+
+            if (string.IsNullOrEmpty(email))
+                throw new ArgumentNullException(nameof(email));
         }
     }
 }
