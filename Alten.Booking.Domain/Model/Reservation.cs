@@ -1,10 +1,5 @@
 ﻿using Alten.Booking.Domain.Abstractions;
 using Alten.Booking.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Alten.Booking.Domain.Model
 {
@@ -34,9 +29,9 @@ namespace Alten.Booking.Domain.Model
             if (Checkout - Checkin > TimeSpan.FromDays(3))
                 throw new TooLongStayException();
 
-            // TODO: validation -> 
-            // the stay can’t be reserved more than 30 days in advance.
-            // All reservations start at least the next day of booking. (InvalidLeadTimeException)
+            TimeSpan leadTime = Checkin - DateTime.Now;
+            if (leadTime < TimeSpan.FromDays(1) || leadTime > TimeSpan.FromDays(30))
+                throw new InvalidLeadTimeException();
         }
     }
 }
