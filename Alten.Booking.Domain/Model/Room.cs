@@ -38,5 +38,11 @@ namespace Alten.Booking.Domain.Model
         {
             throw new NotImplementedException();
         }
+
+        public void PlaceReservation(Guest guest, DateTime checkin, DateTime checkout)
+        {
+            // TODO: check availability
+            throw new NotImplementedException();
+        }
     }
 }
