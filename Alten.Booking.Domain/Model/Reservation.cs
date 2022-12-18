@@ -1,4 +1,5 @@
 ﻿using Alten.Booking.Domain.Abstractions;
+using Alten.Booking.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,16 @@ namespace Alten.Booking.Domain.Model
         public Reservation(Guest guest, Room room, DateTime checkin, DateTime checkout)
         {
             Id = Guid.NewGuid().ToString();
+            Guest = guest;
+            Room = room;
+            Checkin = checkin;
+            Checkout = checkout;
 
-            // TODO: validation -> the stay can’t be longer than 3 days (TooLongStayException)
-            // and can’t be reserved more than 30 days in advance.
+            if (Checkout - Checkin > TimeSpan.FromDays(3))
+                throw new TooLongStayException();
+
+            // TODO: validation -> 
+            // the stay can’t be reserved more than 30 days in advance.
             // All reservations start at least the next day of booking. (InvalidLeadTimeException)
         }
     }
