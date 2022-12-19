@@ -39,10 +39,14 @@ namespace Alten.Booking.Domain.Model
             return Reservations.All(r => desiredCheckin > r.Checkout || desiredCheckout < r.Checkin);
         }
 
-        public void PlaceReservation(Guest guest, DateTime checkin, DateTime checkout)
+        public Reservation PlaceReservation(Guest guest, DateTime checkin, DateTime checkout)
         {
             if (IsAvailable(checkin, checkout))
-                Reservations.Add(new Reservation(guest, this, checkin, checkout));
+            {
+                var reservation = new Reservation(guest, this, checkin, checkout);
+                Reservations.Add(reservation);
+                return reservation;
+            }
             else
                 throw new PeriodNotAvailableException();
         }
