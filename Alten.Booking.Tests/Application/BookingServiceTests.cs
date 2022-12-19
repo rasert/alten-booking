@@ -1,5 +1,6 @@
 ﻿using Alten.Booking.Application.Abstractions;
 using Alten.Booking.Application.Services;
+using Alten.Booking.Domain.Exceptions;
 using Alten.Booking.Domain.Model;
 using Alten.Booking.Tests.Helpers;
 using FluentAssertions;
@@ -63,6 +64,72 @@ namespace Alten.Booking.Tests.Application
 
             // assert
             availableRooms.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public void Should_PlaceReservation_When_RoomIsAvailableAtDesiredPeriod()
+        {
+            // arrange
+            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
+            _rooms.Clear();
+            _rooms.Add(new Room(number: 1, description: "Standard"));
+            _rooms.Add(new Room(number: 2, description: "Deluxe"));
+            _reservations.Clear();
+            _reservations.Add(_rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)));
+            _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
+
+            // act
+            Action act = () => _bookingService.PlaceReservation(
+                guest, roomNumber: 1,
+                checkin: DateTime.Now.AddDays(4),
+                checkout: DateTime.Now.AddDays(6));
+
+            // assert
+            act.Should().NotThrow();
+        }
+
+        [Fact]
+        public void Should_NotPlaceReservation_When_RoomIsNotAvailableAtDesiredPeriod()
+        {
+            // arrange
+            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
+            _rooms.Clear();
+            _rooms.Add(new Room(number: 1, description: "Standard"));
+            _rooms.Add(new Room(number: 2, description: "Deluxe"));
+            _reservations.Clear();
+            _reservations.Add(_rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)));
+            _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
+
+            // act
+            Action act = () => _bookingService.PlaceReservation(
+                guest, roomNumber: 1,
+                checkin: DateTime.Now.AddDays(2),
+                checkout: DateTime.Now.AddDays(4));
+
+            // assert
+            act.Should().Throw<PeriodNotAvailableException>();
+        }
+
+        [Fact]
+        public void Should_NotPlaceReservation_When_RoomIsNotFound()
+        {
+            // arrange
+            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
+            _rooms.Clear();
+            _rooms.Add(new Room(number: 1, description: "Standard"));
+            _rooms.Add(new Room(number: 2, description: "Deluxe"));
+            _reservations.Clear();
+            _reservations.Add(_rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)));
+            _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
+
+            // act
+            Action act = () => _bookingService.PlaceReservation(
+                guest, roomNumber: 99,
+                checkin: DateTime.Now.AddDays(2),
+                checkout: DateTime.Now.AddDays(4));
+
+            // assert
+            act.Should().Throw<RoomNotFoundException>();
         }
     }
 }
