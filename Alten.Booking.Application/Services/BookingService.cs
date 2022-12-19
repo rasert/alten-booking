@@ -27,7 +27,7 @@ namespace Alten.Booking.Application.Services
 
         public IEnumerable<Room> CheckRoomAvailability(DateTime desiredCheckin, DateTime desiredCheckout)
         {
-            throw new NotImplementedException();
+            return _rooms.Get(r => r.IsAvailable(desiredCheckin, desiredCheckout));
         }
 
         public void PlaceReservation(Guest guest, Room room, DateTime checkin, DateTime checkout)
