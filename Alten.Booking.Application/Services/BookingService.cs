@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Alten.Booking.Application.Services
 {
-    public class BookingService
+    public class BookingService : IBookingService
     {
         private readonly IRepository<Room> _rooms;
         private readonly IRepository<Reservation> _reservations;
