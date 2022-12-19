@@ -13,7 +13,7 @@ namespace Alten.Booking.Tests.Domain
             var room = new Room(number: 1, description: "Low Cost");
             List<Reservation> reservations = new()
             {
-                new Reservation(guest, room, checkin: DateTime.Now.AddDays(1), checkout: DateTime.Now.AddDays(3)),
+                new Reservation(guest, room, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)),
                 new Reservation(guest, room, checkin: DateTime.Now.AddDays(7), checkout: DateTime.Now.AddDays(9))
             };
             room.Reservations = reservations;
@@ -33,7 +33,7 @@ namespace Alten.Booking.Tests.Domain
             var room = new Room(number: 1, description: "Low Cost");
             List<Reservation> reservations = new()
             {
-                new Reservation(guest, room, checkin: DateTime.Now.AddDays(1), checkout: DateTime.Now.AddDays(3)),
+                new Reservation(guest, room, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)),
                 new Reservation(guest, room, checkin: DateTime.Now.AddDays(4), checkout: DateTime.Now.AddDays(6))
             };
             room.Reservations = reservations;
@@ -53,7 +53,7 @@ namespace Alten.Booking.Tests.Domain
             var room = new Room(number: 1, description: "Low Cost");
             List<Reservation> reservations = new()
             {
-                new Reservation(guest, room, checkin: DateTime.Now.AddDays(1), checkout: DateTime.Now.AddDays(3)),
+                new Reservation(guest, room, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)),
                 new Reservation(guest, room, checkin: DateTime.Now.AddDays(7), checkout: DateTime.Now.AddDays(9))
             };
             room.Reservations = reservations;
@@ -73,7 +73,7 @@ namespace Alten.Booking.Tests.Domain
             var room = new Room(number: 1, description: "Low Cost");
             List<Reservation> reservations = new()
             {
-                new Reservation(guest, room, checkin: DateTime.Now.AddDays(1), checkout: DateTime.Now.AddDays(3)),
+                new Reservation(guest, room, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)),
                 new Reservation(guest, room, checkin: DateTime.Now.AddDays(4), checkout: DateTime.Now.AddDays(6))
             };
             room.Reservations = reservations;

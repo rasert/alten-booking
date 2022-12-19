@@ -32,6 +32,8 @@ namespace Alten.Booking.Domain.Model
             TimeSpan leadTime = Checkin - DateTime.Now;
             if (leadTime < TimeSpan.FromDays(1) || leadTime > TimeSpan.FromDays(30))
                 throw new InvalidLeadTimeException();
+
+            // TODO: checkin cannot be greater than checkout
         }
     }
 }

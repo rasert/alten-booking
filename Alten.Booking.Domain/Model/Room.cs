@@ -36,7 +36,7 @@ namespace Alten.Booking.Domain.Model
 
         public bool IsAvailable(DateTime desiredCheckin, DateTime desiredCheckout)
         {
-            throw new NotImplementedException();
+            return Reservations.All(r => desiredCheckin > r.Checkout || desiredCheckout < r.Checkin);
         }
 
         public void PlaceReservation(Guest guest, DateTime checkin, DateTime checkout)
