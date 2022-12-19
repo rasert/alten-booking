@@ -7,6 +7,22 @@ namespace Alten.Booking.Tests.Domain
     public class ReservationTests
     {
         [Fact]
+        public void Should_ThrowException_When_CheckinDateIsGraterThanCheckoutDate()
+        {
+            // arrange
+            Guest guest = new(name: "Tony Stark", phone: "3459879514", email: "ironman@starkindustries.com");
+            Room room = new(1005, "Expensive Rooftop");
+            DateTime checkout = DateTime.Now.AddDays(1);
+            DateTime checkin = checkout.AddDays(4);
+
+            // act
+            Action act = () => _ = new Reservation(guest, room, checkin, checkout);
+
+            // assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
         public void Should_ThrowException_When_StayIsLongerThan3Days()
         {
             // arrange
