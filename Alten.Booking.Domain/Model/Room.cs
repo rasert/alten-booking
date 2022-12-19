@@ -1,5 +1,5 @@
 ﻿using Alten.Booking.Domain.Abstractions;
-using System.Xml.Linq;
+using Alten.Booking.Domain.Exceptions;
 
 namespace Alten.Booking.Domain.Model
 {
@@ -41,8 +41,10 @@ namespace Alten.Booking.Domain.Model
 
         public void PlaceReservation(Guest guest, DateTime checkin, DateTime checkout)
         {
-            // TODO: check availability
-            throw new NotImplementedException();
+            if (IsAvailable(checkin, checkout))
+                Reservations.Add(new Reservation(guest, this, checkin, checkout));
+            else
+                throw new PeriodNotAvailableException();
         }
     }
 }

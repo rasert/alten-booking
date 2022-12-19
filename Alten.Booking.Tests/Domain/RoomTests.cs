@@ -1,4 +1,5 @@
-﻿using Alten.Booking.Domain.Model;
+﻿using Alten.Booking.Domain.Exceptions;
+using Alten.Booking.Domain.Model;
 using FluentAssertions;
 
 namespace Alten.Booking.Tests.Domain
@@ -79,10 +80,10 @@ namespace Alten.Booking.Tests.Domain
             room.Reservations = reservations;
 
             // act
-            room.PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(5));
+            Action act = () => room.PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(5));
 
             // assert
-            room.Reservations.Count.Should().Be(2);
+            act.Should().Throw<PeriodNotAvailableException>();
         }
     }
 }
