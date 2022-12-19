@@ -30,7 +30,7 @@ namespace Alten.Booking.Application.Services
             return _rooms.Get(r => r.IsAvailable(desiredCheckin, desiredCheckout));
         }
 
-        public void PlaceReservation(Guest guest, Room room, DateTime checkin, DateTime checkout)
+        public void PlaceReservation(Guest guest, int roomNumber, DateTime checkin, DateTime checkout)
         {
             // TODO: validate room availability
             throw new NotImplementedException();
