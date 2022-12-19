@@ -1,4 +1,5 @@
 ﻿using Alten.Booking.Application.Abstractions;
+using Alten.Booking.Domain.Exceptions;
 using Alten.Booking.Domain.Model;
 using System;
 using System.Collections.Generic;
@@ -30,18 +31,23 @@ namespace Alten.Booking.Application.Services
             return _rooms.Get(r => r.IsAvailable(desiredCheckin, desiredCheckout));
         }
 
-        public void PlaceReservation(Guest guest, int roomNumber, DateTime checkin, DateTime checkout)
+        public async Task PlaceReservationAsync(Guest guest, int roomNumber, DateTime checkin, DateTime checkout)
         {
-            // TODO: validate room availability
+            Room? room = _rooms.Get(r => r.Number == roomNumber).SingleOrDefault();
+            if (room == null)
+                throw new RoomNotFoundException();
+
+            room.PlaceReservation(guest, checkin, checkout);
+
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+        public async Task CancelReservationAsync(string reservationId)
+        {
             throw new NotImplementedException();
         }
 
-        public void CancelReservation(string reservationId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ModifyReservation(Reservation reservation)
+        public async Task ModifyReservationAsync(Reservation reservation)
         {
             // TODO: validate room availability
             throw new NotImplementedException();

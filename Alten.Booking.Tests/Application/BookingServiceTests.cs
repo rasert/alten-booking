@@ -67,7 +67,7 @@ namespace Alten.Booking.Tests.Application
         }
 
         [Fact]
-        public void Should_PlaceReservation_When_RoomIsAvailableAtDesiredPeriod()
+        public async Task Should_PlaceReservation_When_RoomIsAvailableAtDesiredPeriod()
         {
             // arrange
             Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
@@ -79,17 +79,17 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Action act = () => _bookingService.PlaceReservation(
+            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
                 guest, roomNumber: 1,
                 checkin: DateTime.Now.AddDays(4),
                 checkout: DateTime.Now.AddDays(6));
 
             // assert
-            act.Should().NotThrow();
+            await act.Should().NotThrowAsync();
         }
 
         [Fact]
-        public void Should_NotPlaceReservation_When_RoomIsNotAvailableAtDesiredPeriod()
+        public async Task Should_NotPlaceReservation_When_RoomIsNotAvailableAtDesiredPeriod()
         {
             // arrange
             Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
@@ -101,17 +101,17 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Action act = () => _bookingService.PlaceReservation(
+            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
                 guest, roomNumber: 1,
                 checkin: DateTime.Now.AddDays(2),
                 checkout: DateTime.Now.AddDays(4));
 
             // assert
-            act.Should().Throw<PeriodNotAvailableException>();
+            await act.Should().ThrowAsync<PeriodNotAvailableException>();
         }
 
         [Fact]
-        public void Should_NotPlaceReservation_When_RoomIsNotFound()
+        public async Task Should_NotPlaceReservation_When_RoomIsNotFound()
         {
             // arrange
             Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
@@ -123,13 +123,13 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Action act = () => _bookingService.PlaceReservation(
+            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
                 guest, roomNumber: 99,
                 checkin: DateTime.Now.AddDays(2),
                 checkout: DateTime.Now.AddDays(4));
 
             // assert
-            act.Should().Throw<RoomNotFoundException>();
+            await act.Should().ThrowAsync<RoomNotFoundException>();
         }
     }
 }
