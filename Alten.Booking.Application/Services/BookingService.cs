@@ -54,7 +54,7 @@ namespace Alten.Booking.Application.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task ModifyReservationAsync(Reservation reservation)
+        public async Task ModifyReservationAsync(string reservationId, DateTime newCheckin, DateTime newCheckout)
         {
             // TODO: validate room availability
             throw new NotImplementedException();

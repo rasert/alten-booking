@@ -6,7 +6,7 @@ namespace Alten.Booking.Application.Abstractions
     {
         Task CancelReservationAsync(string reservationId);
         IEnumerable<Room> CheckRoomAvailability(DateTime desiredCheckin, DateTime desiredCheckout);
-        Task ModifyReservationAsync(Reservation reservation);
+        Task ModifyReservationAsync(string reservationId, DateTime newCheckin, DateTime newCheckout);
         Task PlaceReservationAsync(Guest guest, int roomNumber, DateTime checkin, DateTime checkout);
     }
 }
