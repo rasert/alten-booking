@@ -1,5 +1,7 @@
 using Alten.Booking.Application.Abstractions;
+using Alten.Booking.Application.Services;
 using Alten.Booking.Infrastructure.Persistence;
+using System.Text.Json.Serialization;
 
 namespace Alten.Booking.Api
 {
@@ -15,10 +17,18 @@ namespace Alten.Booking.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+            });
 
             builder.Services.AddDbContext<ApplicationContext>();
             builder.Services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<ApplicationContext>());
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             var app = builder.Build();
 
