@@ -1,12 +1,7 @@
 ﻿using Alten.Booking.Application.Abstractions;
 using Alten.Booking.Domain.Exceptions;
 using Alten.Booking.Domain.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Alten.Booking.Application.Services
 {
@@ -21,7 +16,6 @@ namespace Alten.Booking.Application.Services
             IRepository<Reservation> reservations,
             IUnitOfWork unitOfWork)
         {
-            // TODO
             _rooms = rooms;
             _reservations = reservations;
             _unitOfWork = unitOfWork;
