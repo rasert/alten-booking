@@ -4,6 +4,7 @@ using Alten.Booking.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -56,8 +57,22 @@ namespace Alten.Booking.Application.Services
 
         public async Task ModifyReservationAsync(string reservationId, DateTime newCheckin, DateTime newCheckout)
         {
-            // TODO: validate room availability
-            throw new NotImplementedException();
+            Reservation? reservation = await _reservations.GetAsync(
+                id: reservationId,
+                includes: new Expression<Func<Reservation, object>>[] { r => r.Room, r => r.Guest });
+
+            if (reservation == null)
+                throw new ReservationNotFoundException();
+
+            Room room = reservation.Room;
+            Guest guest = reservation.Guest;
+
+            _reservations.Remove(reservation);
+            room.Reservations.Remove(reservation);
+
+            room.PlaceReservation(guest, newCheckin, newCheckout);
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
