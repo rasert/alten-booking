@@ -17,7 +17,7 @@ namespace Alten.Booking.Infrastructure.Persistence
         {
             Environment.SpecialFolder folder = Environment.SpecialFolder.LocalApplicationData;
             string? path = Environment.GetFolderPath(folder);
-            DbPath = Path.Join(path, "AltenBooking", "booking.db");
+            DbPath = Path.Join(path, "booking.db");
             logger.LogInformation($"Database file path: {DbPath}");
         }
 
