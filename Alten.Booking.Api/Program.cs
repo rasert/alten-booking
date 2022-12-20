@@ -1,3 +1,4 @@
+using Alten.Booking.Api.Middlewares;
 using Alten.Booking.Application.Abstractions;
 using Alten.Booking.Application.Services;
 using Alten.Booking.Infrastructure.Persistence;
@@ -32,11 +33,15 @@ namespace Alten.Booking.Api
 
             var app = builder.Build();
 
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                //app.UseDeveloperExceptionPage();
+                //app.UseMigrationsEndPoint();
             }
 
             using (var scope = app.Services.CreateScope())
