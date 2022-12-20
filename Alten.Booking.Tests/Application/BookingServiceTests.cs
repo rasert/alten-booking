@@ -131,5 +131,46 @@ namespace Alten.Booking.Tests.Application
             // assert
             await act.Should().ThrowAsync<RoomNotFoundException>();
         }
+
+        [Fact]
+        public async Task Should_CancelReservation_When_ReservationIsFound()
+        {
+            // arrange
+            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
+            const string reservationId = "76365025-0AA0-4323-962F-F02C312BB6C2";
+            _rooms.Clear();
+            _rooms.Add(new Room(number: 1, description: "Standard"));
+            _reservations.Clear();
+            var reservation = _rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3));
+            reservation.Id = reservationId;
+            _reservations.Add(reservation);
+
+            // act
+            Func<Task> act = async () => await _bookingService.CancelReservationAsync(reservationId);
+
+            // assert
+            await act.Should().NotThrowAsync();
+            _reservations.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public async Task Should_NotCancelReservation_When_ReservationIsNotFound()
+        {
+            // arrange
+            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
+            const string reservationId = "76365025-0AA0-4323-962F-F02C312BB6C2";
+            _rooms.Clear();
+            _rooms.Add(new Room(number: 1, description: "Standard"));
+            _reservations.Clear();
+            var reservation = _rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3));
+            reservation.Id = reservationId;
+            _reservations.Add(reservation);
+
+            // act
+            Func<Task> act = async () => await _bookingService.CancelReservationAsync("wrong-id");
+
+            // assert
+            await act.Should().ThrowAsync<ReservationNotFoundException>();
+        }
     }
 }
