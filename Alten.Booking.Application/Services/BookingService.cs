@@ -44,7 +44,14 @@ namespace Alten.Booking.Application.Services
 
         public async Task CancelReservationAsync(string reservationId)
         {
-            throw new NotImplementedException();
+            Reservation? reservation = await _reservations.GetAsync(id: reservationId);
+
+            if (reservation == null)
+                throw new ReservationNotFoundException();
+
+            _reservations.Remove(reservation);
+
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task ModifyReservationAsync(Reservation reservation)
