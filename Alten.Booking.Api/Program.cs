@@ -1,3 +1,6 @@
+using Alten.Booking.Application.Abstractions;
+using Alten.Booking.Infrastructure.Persistence;
+
 namespace Alten.Booking.Api
 {
     public class Program
@@ -13,6 +16,10 @@ namespace Alten.Booking.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<ApplicationContext>();
+            builder.Services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<ApplicationContext>());
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -20,6 +27,14 @@ namespace Alten.Booking.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+            }
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var context = services.GetRequiredService<ApplicationContext>();
+                context.Database.EnsureCreated();
+                DbSeeder.Seed(context);
             }
 
             app.UseHttpsRedirection();
