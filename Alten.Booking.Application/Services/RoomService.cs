@@ -15,6 +15,9 @@ namespace Alten.Booking.Application.Services
 
         public IEnumerable<Room> CheckRoomAvailability(DateTime desiredCheckin, DateTime desiredCheckout)
         {
+            if (desiredCheckin > desiredCheckout)
+                throw new ArgumentOutOfRangeException(nameof(desiredCheckin), message: "Checkin date cannot be greater than checkout date.");
+
             return _rooms.Get(new AvailableRooms(desiredCheckin, desiredCheckout));
         }
     }

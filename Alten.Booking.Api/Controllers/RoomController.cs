@@ -21,9 +21,6 @@ namespace Alten.Booking.Api.Controllers
         [HttpGet("available")]
         public IActionResult Get([Required][FromQuery] DateTime checkin, [Required][FromQuery] DateTime checkout)
         {
-            if (checkin > checkout)
-                ModelState.AddModelError(key: "InvalidPeriod", errorMessage: "Checkin date cannot be greater than checkout date.");
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
