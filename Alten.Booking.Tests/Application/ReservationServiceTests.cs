@@ -8,62 +8,20 @@ using Moq;
 
 namespace Alten.Booking.Tests.Application
 {
-    public class BookingServiceTests
+    public class ReservationServiceTests
     {
-        private readonly BookingService _bookingService;
+        private readonly ReservationService _reservationService;
         private readonly List<Room> _rooms;
         private readonly List<Reservation> _reservations;
 
-        public BookingServiceTests()
+        public ReservationServiceTests()
         {
             _rooms = new List<Room>();
             _reservations = new List<Reservation>();
             Mock<IRepository<Room>> roomRepoMock = MockHelpers.GetRepositoryMock<IRepository<Room>, Room>(_rooms);
             Mock<IRepository<Reservation>> reservationRepoMock = MockHelpers.GetRepositoryMock<IRepository<Reservation>, Reservation>(_reservations);
             Mock<IUnitOfWork> unitOfWorkMock = new();
-            _bookingService = new BookingService(roomRepoMock.Object, reservationRepoMock.Object, unitOfWorkMock.Object);
-        }
-
-        [Fact]
-        public void Should_ReturnAvailableRooms_When_AppropriatePeriodIsChecked()
-        {
-            // arrange
-            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
-            _rooms.Clear();
-            _rooms.Add(new Room(number: 1, description: "Standard"));
-            _rooms.Add(new Room(number: 2, description: "Deluxe"));
-            _reservations.Clear();
-            _reservations.Add(_rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)));
-            _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(4), checkout: DateTime.Now.AddDays(6)));
-
-            // act
-            IEnumerable<Room> availableRooms = _bookingService.CheckRoomAvailability(
-                desiredCheckin: DateTime.Now.AddHours(30),
-                desiredCheckout: DateTime.Now.AddDays(3));
-
-            // assert
-            availableRooms.Should().HaveCount(1);
-        }
-
-        [Fact]
-        public void Should_NotReturnAvailableRooms_When_BusyPeriodIsChecked()
-        {
-            // arrange
-            Guest guest = new(name: "Peter Quill", phone: "6781238734", email: "starlord@gmail.com");
-            _rooms.Clear();
-            _rooms.Add(new Room(number: 1, description: "Standard"));
-            _rooms.Add(new Room(number: 2, description: "Deluxe"));
-            _reservations.Clear();
-            _reservations.Add(_rooms[0].PlaceReservation(guest, checkin: DateTime.Now.AddHours(30), checkout: DateTime.Now.AddDays(3)));
-            _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
-
-            // act
-            IEnumerable<Room> availableRooms = _bookingService.CheckRoomAvailability(
-                desiredCheckin: DateTime.Now.AddHours(30),
-                desiredCheckout: DateTime.Now.AddDays(3));
-
-            // assert
-            availableRooms.Should().HaveCount(0);
+            _reservationService = new ReservationService(roomRepoMock.Object, reservationRepoMock.Object, unitOfWorkMock.Object);
         }
 
         [Fact]
@@ -79,7 +37,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
+            Func<Task> act = async () => await _reservationService.PlaceReservationAsync(
                 guest, roomNumber: 1,
                 checkin: DateTime.Now.AddDays(4),
                 checkout: DateTime.Now.AddDays(6));
@@ -101,7 +59,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
+            Func<Task> act = async () => await _reservationService.PlaceReservationAsync(
                 guest, roomNumber: 1,
                 checkin: DateTime.Now.AddDays(2),
                 checkout: DateTime.Now.AddDays(4));
@@ -123,7 +81,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(_rooms[1].PlaceReservation(guest, checkin: DateTime.Now.AddDays(2), checkout: DateTime.Now.AddDays(4)));
 
             // act
-            Func<Task> act = async () => await _bookingService.PlaceReservationAsync(
+            Func<Task> act = async () => await _reservationService.PlaceReservationAsync(
                 guest, roomNumber: 99,
                 checkin: DateTime.Now.AddDays(2),
                 checkout: DateTime.Now.AddDays(4));
@@ -146,7 +104,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.CancelReservationAsync(reservationId);
+            Func<Task> act = async () => await _reservationService.CancelReservationAsync(reservationId);
 
             // assert
             await act.Should().NotThrowAsync();
@@ -167,7 +125,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.CancelReservationAsync("wrong-id");
+            Func<Task> act = async () => await _reservationService.CancelReservationAsync("wrong-id");
 
             // assert
             await act.Should().ThrowAsync<ReservationNotFoundException>();
@@ -188,7 +146,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 reservationId, newCheckin: DateTime.Now.AddDays(4), newCheckout: DateTime.Now.AddDays(6));
 
             // assert
@@ -210,7 +168,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 reservationId, newCheckin: DateTime.Now.AddDays(6), newCheckout: DateTime.Now.AddDays(8));
 
             // assert
@@ -231,7 +189,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 reservationId, newCheckin: DateTime.Now.AddDays(2), newCheckout: DateTime.Now.AddDays(15));
 
             // assert
@@ -253,7 +211,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 "wrong-id", newCheckin: DateTime.Now.AddDays(4), newCheckout: DateTime.Now.AddDays(6));
 
             // assert
@@ -275,7 +233,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 reservationId, newCheckin: DateTime.Now, newCheckout: DateTime.Now.AddDays(2));
 
             // assert
@@ -297,7 +255,7 @@ namespace Alten.Booking.Tests.Application
             _reservations.Add(reservation);
 
             // act
-            Func<Task> act = async () => await _bookingService.ModifyReservationAsync(
+            Func<Task> act = async () => await _reservationService.ModifyReservationAsync(
                 reservationId, newCheckin: DateTime.Now.AddDays(40), newCheckout: DateTime.Now.AddDays(42));
 
             // assert

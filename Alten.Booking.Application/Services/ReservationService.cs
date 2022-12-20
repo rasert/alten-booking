@@ -1,37 +1,28 @@
 ﻿using Alten.Booking.Application.Abstractions;
 using Alten.Booking.Domain.Exceptions;
 using Alten.Booking.Domain.Model;
-using Alten.Booking.Domain.Queries;
 using System.Linq.Expressions;
 
 namespace Alten.Booking.Application.Services
 {
-    public class BookingService : IBookingService
+    public class ReservationService : IReservationService
     {
         private readonly IRepository<Room> _rooms;
         private readonly IRepository<Reservation> _reservations;
         private readonly IUnitOfWork _unitOfWork;
 
-        public BookingService(
+        public ReservationService(
             IRepository<Room> rooms,
             IRepository<Reservation> reservations,
             IUnitOfWork unitOfWork)
         {
-            // TODO: rename to ReservationService
             _rooms = rooms;
             _reservations = reservations;
             _unitOfWork = unitOfWork;
         }
 
-        public IEnumerable<Room> CheckRoomAvailability(DateTime desiredCheckin, DateTime desiredCheckout)
-        {
-            // TODO: move to RoomService
-            return _rooms.Get(new AvailableRooms(desiredCheckin, desiredCheckout));
-        }
-
         public IEnumerable<Reservation> GetGuestReservations(string guestEmail)
         {
-            // TODO: create IQuery
             return _reservations.Get(
                 expression: r => r.Guest.Email.Equals(guestEmail),
                 includes: new Expression<Func<Reservation, object>>[] { r => r.Room });

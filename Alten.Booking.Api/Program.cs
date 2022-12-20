@@ -29,7 +29,9 @@ namespace Alten.Booking.Api
             builder.Services.AddDbContext<ApplicationContext>();
             builder.Services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<ApplicationContext>());
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IReservationService, ReservationService>();
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddSingleton<ExceptionHandlerMiddleware>();
 
             var app = builder.Build();
 

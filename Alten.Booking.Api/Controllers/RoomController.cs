@@ -10,11 +10,11 @@ namespace Alten.Booking.Api.Controllers
     [ApiController]
     public class RoomController : ControllerBase
     {
-        private readonly IBookingService _bookingService;
+        private readonly IRoomService _roomService;
 
-        public RoomController(IBookingService bookingService)
+        public RoomController(IRoomService roomService)
         {
-            _bookingService = bookingService;
+            _roomService = roomService;
         }
 
         // GET: api/<RoomsController>
@@ -24,7 +24,7 @@ namespace Alten.Booking.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(_bookingService.CheckRoomAvailability(checkin, checkout));
+            return Ok(_roomService.CheckRoomAvailability(checkin, checkout));
         }
     }
 }

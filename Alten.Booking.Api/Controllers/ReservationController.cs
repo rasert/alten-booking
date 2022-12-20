@@ -13,12 +13,10 @@ namespace Alten.Booking.Api.Controllers
     [ApiController]
     public class ReservationController : ControllerBase
     {
-        private readonly IBookingService _bookingService;
+        private readonly IReservationService _bookingService;
 
-        public ReservationController(IBookingService bookingService)
+        public ReservationController(IReservationService bookingService)
         {
-            // TODO: Exception Handling and Status Codes
-
             _bookingService = bookingService;
         }
 
